@@ -32,6 +32,9 @@ namespace Scratch.Widgets {
         private Gtk.TextIter last_select_start_iter;
         private Gtk.TextIter last_select_end_iter;
 
+        private Gtk.SourceGutter source_gutter;
+        private Scratch.Widgets.SourceGutterRenderer source_gutter_renderer;
+
         // Pause after end user highlighting to confirm select,in ms
         private const uint SELECTION_CHANGED_PAUSE = 400;
 
@@ -50,6 +53,7 @@ namespace Scratch.Widgets {
         }
 
         public SourceView () {
+            debug ("In source view.");
             Object (
                 show_line_numbers: true,
                 smart_backspace: true,
@@ -87,6 +91,13 @@ namespace Scratch.Widgets {
 
             source_buffer.tag_table.add (error_tag);
             source_buffer.tag_table.add (warning_tag);
+
+            // Get the left source gutter?
+            debug ("Test");
+
+            source_gutter_renderer = new Scratch.Widgets.SourceGutterRenderer();
+            source_gutter = this.get_gutter(Gtk.TextWindowType.LEFT);
+            source_gutter.insert(source_gutter_renderer, 0);
 
             restore_settings ();
 
@@ -150,6 +161,7 @@ namespace Scratch.Widgets {
         }
 
         private bool get_current_line (out Gtk.TextIter start, out Gtk.TextIter end) {
+            debug("test?");
             buffer.get_iter_at_offset (out start, buffer.cursor_position);
             start.backward_chars (start.get_line_offset ());
             end = start;
